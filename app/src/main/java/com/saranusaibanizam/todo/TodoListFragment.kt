@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Adapter
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -29,7 +30,14 @@ class TodoListFragment : Fragment() {
         binding.todoRV.layoutManager=LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
         binding.todoRV.adapter=adapter
         toDoViewModel.getToDos().observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
+            if(it.isEmpty()){
+                binding.todoRV.isVisible=false
+                binding.emptyTV.isVisible=true
+            }else{
+                adapter.submitList(it)
+                binding.emptyTV.isVisible=false
+                binding.todoRV.isVisible=true
+            }
         })
         binding.addBT.setOnClickListener {
             findNavController().navigate(R.id.action_todoListFragment_to_addTodoFragment)

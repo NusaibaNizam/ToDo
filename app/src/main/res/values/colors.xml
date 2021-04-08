@@ -11,4 +11,5 @@
     <color name="primary">#E13776</color>
     <color name="normal">#EC756A</color>
     <color name="low">#F7B35E</color>
+    <color name="grey">#9C9B9B</color>
 </resources>

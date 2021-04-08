@@ -33,7 +33,18 @@
                 android:id="@+id/todoRV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp" />
+                android:layout_margin="10dp"
+                />
+            <TextView
+                android:textColor="@color/grey"
+                android:visibility="gone"
+                android:padding="10dp"
+                android:id="@+id/emptyTV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:text="Add ToDos..."
+                android:textSize="20dp"/>
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

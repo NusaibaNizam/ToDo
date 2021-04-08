@@ -36,18 +36,12 @@ class AddTodoFragment : Fragment() {
             val rb=container?.findViewById<RadioButton>(checkedId)
             priority=rb?.text.toString()
         }
-        binding.dateBT.setOnClickListener {
-            DatePickerFragment{
-             date=it
-             binding.dateTV.text = SimpleDateFormat("dd/MM/yyyy").format(Date(date))
-            }.show(childFragmentManager,"Date Picker")
-        }
-        binding.timeBT.setOnClickListener {
-            TimePickerFragment(date) {
-                time = it
-                binding.timeTV.text = SimpleDateFormat("hh:mm a").format(Date(time))
-            }.show(childFragmentManager,"Time Picker")
-        }
+
+        setDateListener(binding.dateBT)
+        setDateListener(binding.dateTV)
+        setTimeListener(binding.timeBT)
+        setTimeListener(binding.timeTV)
+
         binding.saveBT.setOnClickListener {
             if(!TextUtils.isEmpty(binding.todoET.text)){
                 val name=binding.todoET.text.toString()
@@ -58,6 +52,9 @@ class AddTodoFragment : Fragment() {
                 toDoViewModel.addToDo(todo)
                 findNavController().navigate(R.id.action_addTodoFragment_to_todoListFragment)
 
+            }else{
+                binding.todoET.setError("Please enter the task!")
+                binding.todoET.requestFocus()
             }
         }
         return binding.root
@@ -74,5 +71,23 @@ class AddTodoFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         activity?.window?.statusBarColor = Color.WHITE
+    }
+
+
+    private fun setDateListener(view: View){
+        view.setOnClickListener {
+            DatePickerFragment{
+                date=it
+                binding.dateTV.text = SimpleDateFormat("dd/MM/yyyy").format(Date(date))
+            }.show(childFragmentManager,"Date Picker")
+        }
+    }
+    private fun setTimeListener(view:View){
+        view.setOnClickListener {
+            TimePickerFragment(date) {
+                time = it
+                binding.timeTV.text = SimpleDateFormat("hh:mm a").format(Date(time))
+            }.show(childFragmentManager,"Time Picker")
+        }
     }
 }
