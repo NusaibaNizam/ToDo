@@ -7,18 +7,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Adapter
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.saranusaibanizam.todo.databinding.FragmentTodoListBinding
 
 class TodoListFragment : Fragment() {
 
     private lateinit var binding: FragmentTodoListBinding
+    private val toDoViewModel:ToDoViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         binding= FragmentTodoListBinding.inflate(inflater)
+        val adapter:ToDoAdapter= ToDoAdapter(requireActivity())
+        binding.todoRV.layoutManager=LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
+        binding.todoRV.adapter=adapter
+        toDoViewModel.getToDos().observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
+        })
         binding.addBT.setOnClickListener {
             findNavController().navigate(R.id.action_todoListFragment_to_addTodoFragment)
         }

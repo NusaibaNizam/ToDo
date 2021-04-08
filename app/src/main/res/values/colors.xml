@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="accent">#E6104D</color>
     <color name="primary">#E13776</color>
+    <color name="normal">#EC756A</color>
+    <color name="low">#F7B35E</color>
 </resources>
