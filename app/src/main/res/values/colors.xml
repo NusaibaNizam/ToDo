@@ -9,7 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="accent">#E6104D</color>
     <color name="primary">#E13776</color>
+    <color name="high">#E13776</color>
     <color name="normal">#EC756A</color>
     <color name="low">#F7B35E</color>
+    <color name="highLight">#FF69A8</color>
+    <color name="normalLight">#FFA7B0</color>
+    <color name="lowLight">#FFE590</color>
     <color name="grey">#9C9B9B</color>
 </resources>

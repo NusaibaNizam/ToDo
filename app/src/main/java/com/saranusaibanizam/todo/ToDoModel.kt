@@ -9,10 +9,10 @@ import androidx.room.PrimaryKey
 data class ToDoModel(
   @PrimaryKey(autoGenerate = true)
   val id:Long=0L,
-  val name:String,
+  var name:String,
   @ColumnInfo(name = "done")
-  val isDone:Boolean=false,
-  val priority: String,
-  val date: Long=System.currentTimeMillis(),
-  val time: Long=System.currentTimeMillis()
+  var isDone:Boolean=false,
+  var priority: String,
+  var date: Long=System.currentTimeMillis(),
+  var time: Long=System.currentTimeMillis()
 )

@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.saranusaibanizam.todo.databinding.FragmentTodoListBinding
 
@@ -26,9 +27,17 @@ class TodoListFragment : Fragment() {
     ): View? {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         binding= FragmentTodoListBinding.inflate(inflater)
-        val adapter:ToDoAdapter= ToDoAdapter(requireActivity())
+        val adapter = ToDoAdapter(requireActivity()){todo,changeType->
+            when(changeType){
+                TODO_EDIT->toDoViewModel.updateToDo(todo)
+                TODO_DELETE->toDoViewModel.removeToDo(todo)
+            }
+        }
         binding.todoRV.layoutManager=LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
         binding.todoRV.adapter=adapter
+        val ItemTouchHelper=ItemTouchHelper(adapter.swipeToDeleteCallback)
+        ItemTouchHelper.attachToRecyclerView(binding.todoRV)
+
         toDoViewModel.getToDos().observe(viewLifecycleOwner, Observer {
             if(it.isEmpty()){
                 binding.todoRV.isVisible=false

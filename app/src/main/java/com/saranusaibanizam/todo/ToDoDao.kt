@@ -11,6 +11,6 @@ interface ToDoDao {
     fun updateToDo(todo:ToDoModel)
     @Delete
     fun deleteToDo(todo:ToDoModel)
-    @Query("select * from table_todo order by time asc")
+    @Query("select * from (select * from table_todo order by time asc) order by done asc")
     fun getAllToDo():LiveData<List<ToDoModel>>
 }
