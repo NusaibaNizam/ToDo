@@ -3,8 +3,7 @@ package com.saranusaibanizam.todo
 import android.content.Context
 import androidx.lifecycle.LiveData
 
-class ToDoRepository(context: Context) {
-    private val toDoDao:ToDoDao=ToDoDatabase.getInstance(context).getTodoDao()
+class ToDoRepository(val toDoDao:ToDoDao) {
     fun insertTodo(toDoModel: ToDoModel){
         toDoDao.insertToDo(toDoModel)
     }

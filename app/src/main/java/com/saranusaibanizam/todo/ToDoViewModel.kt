@@ -7,7 +7,9 @@ import java.util.*
 
 
 class ToDoViewModel(context: Application):AndroidViewModel(context) {
-    private val todoRep: ToDoRepository= ToDoRepository(context)
+
+    private val toDoDao =ToDoDatabase.getInstance(context).getTodoDao()
+    private val todoRep: ToDoRepository= ToDoRepository(toDoDao)
     fun getCorrectTime(time:Long, date:Long):Long{
         val cal= Calendar.getInstance();
         cal.timeInMillis=time

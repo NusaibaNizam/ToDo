@@ -3,7 +3,7 @@ package com.saranusaibanizam.todo
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
-import java.text.SimpleDateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -17,37 +17,13 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
     private lateinit var binding:TodoRowBinding
     val swipeToDeleteCallback=SwipeToDeleteCallback()
     class ToDoViewHolder(val binding: TodoRowBinding,val listener:(ToDoModel,String)->Unit):RecyclerView.ViewHolder(binding.root){
-        fun setBackground(toDoModel:ToDoModel, binding: TodoRowBinding){
-            var colorID:Int?=null
-            if(toDoModel.isDone){
-                colorID=when(toDoModel.priority){
-                    HIGH->R.color.highLight
-                    LOW->R.color.lowLight
-                    else->R.color.normalLight
-                }
-                binding.todoTV.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-                binding.todoTV.setTypeface(binding.todoTV.typeface, Typeface.ITALIC)
-            }else {
-                colorID=when (toDoModel.priority) {
-                    HIGH -> R.color.high
-                    LOW -> R.color.low
-                    else -> R.color.normal
-                }
-                binding.todoTV.paintFlags = Paint.ANTI_ALIAS_FLAG
-                binding.todoTV.setTypeface(binding.todoTV.typeface, Typeface.BOLD)
-            }
-            binding.containerL.setBackgroundColor(ContextCompat.getColor(binding.root.context,colorID))
-        }
+
+
         fun bind(toDoModel: ToDoModel){
-            binding.todoTV.text=toDoModel.name
-            binding.dateRowTV.text = SimpleDateFormat("dd/MM/yyyy").format(toDoModel.date)
-            binding.timeRowTV.text = SimpleDateFormat("hh:mm a").format(toDoModel.time)
-            binding.isDoneCB.isChecked=toDoModel.isDone
-            setBackground(toDoModel,binding)
+            binding.todo=toDoModel
             binding.isDoneCB.setOnClickListener{
-                toDoModel.isDone=!toDoModel.isDone
-                listener(toDoModel, TODO_EDIT)
-                setBackground(toDoModel,binding)
+                val newTodo=ToDoModel(toDoModel.id,toDoModel.name,!toDoModel.isDone,toDoModel.priority,toDoModel.date,toDoModel.time)
+                listener(newTodo, TODO_EDIT)
             }
         }
     }
@@ -58,7 +34,7 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
     }
 
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(holder.adapterPosition))
     }
     inner class SwipeToDeleteCallback:ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
 
@@ -126,7 +102,7 @@ class ToDoDiffCallBack:DiffUtil.ItemCallback<ToDoModel>(){
     }
 
     override fun areContentsTheSame(oldItem: ToDoModel, newItem: ToDoModel): Boolean {
-        return oldItem==newItem
+        return oldItem.isDone==newItem.isDone
     }
 
 

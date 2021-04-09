@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="todo"
+            type="com.saranusaibanizam.todo.ToDoModel" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -15,6 +17,7 @@
         app:cardElevation="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            app:setBackgroundColor="@{todo}"
             android:id="@+id/containerL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,6 +26,7 @@
             <TextView
                 android:id="@+id/timeRowTV"
                 android:layout_width="wrap_content"
+                app:setTime="@{todo.time}"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:textColor="@color/white"
@@ -36,6 +40,7 @@
 
             <CheckBox
                 android:id="@+id/isDoneCB"
+                android:checked="@{todo.done}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -45,11 +50,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                app:setTextStyle="@{todo.done}"
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:focusableInTouchMode="true"
                 android:id="@+id/todoTV"
+                android:text="@{todo.name}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
@@ -63,6 +70,7 @@
 
             <TextView
                 android:id="@+id/dateRowTV"
+                app:setDate="@{todo.date}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"

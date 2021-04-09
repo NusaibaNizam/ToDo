@@ -2,6 +2,7 @@ package com.saranusaibanizam.todo
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,13 +40,13 @@ class TodoListFragment : Fragment() {
         ItemTouchHelper.attachToRecyclerView(binding.todoRV)
 
         toDoViewModel.getToDos().observe(viewLifecycleOwner, Observer {
-            if(it.isEmpty()){
-                binding.todoRV.isVisible=false
-                binding.emptyTV.isVisible=true
-            }else{
+            if (it.isEmpty()) {
+                binding.todoRV.isVisible = false
+                binding.emptyTV.isVisible = true
+            } else {
                 adapter.submitList(it)
-                binding.emptyTV.isVisible=false
-                binding.todoRV.isVisible=true
+                binding.emptyTV.isVisible = false
+                binding.todoRV.isVisible = true
             }
         })
         binding.addBT.setOnClickListener {
