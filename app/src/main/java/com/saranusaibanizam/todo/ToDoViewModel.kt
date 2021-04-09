@@ -8,14 +8,16 @@ import java.util.*
 
 class ToDoViewModel(context: Application):AndroidViewModel(context) {
     private val todoRep: ToDoRepository= ToDoRepository(context)
-    fun getCorretctTime(time:Long,date:Long):Long{
-        val timeCal= Calendar.getInstance();
-        timeCal.timeInMillis=time
-        val dateCal=Calendar.getInstance()
-        dateCal.timeInMillis = date
+    fun getCorrectTime(time:Long, date:Long):Long{
         val cal= Calendar.getInstance();
-        cal.set(dateCal.get(Calendar.YEAR),dateCal.get(Calendar.MONTH),dateCal.get(Calendar.DAY_OF_MONTH)
-            ,timeCal.get(Calendar.HOUR_OF_DAY),timeCal.get(Calendar.MINUTE))
+        cal.timeInMillis=time
+        val hour=cal.get(Calendar.HOUR_OF_DAY)
+        val minute=cal.get(Calendar.MINUTE)
+        cal.timeInMillis = date
+        val year=cal.get(Calendar.YEAR)
+        val month =cal.get(Calendar.MONTH)
+        val day=cal.get(Calendar.DAY_OF_MONTH)
+        cal.set(year, month, day, hour, minute)
         return cal.timeInMillis
     }
     fun addToDo(toDoModel: ToDoModel){

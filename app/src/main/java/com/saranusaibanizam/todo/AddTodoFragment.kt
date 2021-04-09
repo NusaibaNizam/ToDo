@@ -45,9 +45,7 @@ class AddTodoFragment : Fragment() {
         binding.saveBT.setOnClickListener {
             if(!TextUtils.isEmpty(binding.todoET.text)){
                 val name=binding.todoET.text.toString()
-                if(date>time){
-                    time=toDoViewModel.getCorretctTime(time,date)
-                }
+                time=toDoViewModel.getCorrectTime(time,date)
                 val todo=ToDoModel(name = name,priority = priority,date = date,time = time)
                 toDoViewModel.addToDo(todo)
                 findNavController().navigate(R.id.action_addTodoFragment_to_todoListFragment)
@@ -84,7 +82,7 @@ class AddTodoFragment : Fragment() {
     }
     private fun setTimeListener(view:View){
         view.setOnClickListener {
-            TimePickerFragment(date) {
+            TimePickerFragment {
                 time = it
                 binding.timeTV.text = SimpleDateFormat("hh:mm a").format(Date(time))
             }.show(childFragmentManager,"Time Picker")

@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="accent">#E6104D</color>
+    <color name="delete">#FFDEDE</color>
     <color name="primary">#E13776</color>
     <color name="high">#E13776</color>
     <color name="normal">#EC756A</color>
