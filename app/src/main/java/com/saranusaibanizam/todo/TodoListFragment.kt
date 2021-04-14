@@ -2,45 +2,123 @@ package com.saranusaibanizam.todo
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Adapter
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.saranusaibanizam.todo.databinding.FragmentTodoListBinding
+
 
 class TodoListFragment : Fragment() {
 
     private lateinit var binding: FragmentTodoListBinding
+    var todoLiveDataList:LiveData<List<ToDoModel>>?=null
     private val toDoViewModel:ToDoViewModel by activityViewModels()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         binding= FragmentTodoListBinding.inflate(inflater)
-        val adapter = ToDoAdapter(requireActivity()){todo,changeType->
+
+
+        val adapter = ToDoAdapter(requireActivity()){ todo, changeType->
             when(changeType){
-                TODO_EDIT->toDoViewModel.updateToDo(todo)
-                TODO_DELETE->toDoViewModel.removeToDo(todo)
+                TODO_EDIT -> toDoViewModel.updateToDo(todo)
+                TODO_DELETE -> {
+                    val newTodo=ToDoModel(todo.id,todo.name,todo.isDone,todo.priority,todo.date,todo.time)
+                    toDoViewModel.removeToDo(todo)
+                    val undoSnackbar = Snackbar.make(binding.todoListCV,
+                            R.string.undo_delete, Snackbar.LENGTH_LONG)
+                    undoSnackbar.setAction(R.string.undo, View.OnClickListener {
+                        toDoViewModel.addToDo(newTodo)
+                    })
+                    undoSnackbar.anchorView = binding.snackBarAnchor
+                    undoSnackbar.show()
+                    undoSnackbar.addCallback(object :BaseTransientBottomBar.BaseCallback<Snackbar>(){
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                        }
+                    })
+                }
             }
         }
-        binding.todoRV.layoutManager=LinearLayoutManager(requireActivity(),LinearLayoutManager.VERTICAL,false)
+        binding.todoRV.layoutManager=LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.todoRV.adapter=adapter
         val ItemTouchHelper=ItemTouchHelper(adapter.swipeToDeleteCallback)
         ItemTouchHelper.attachToRecyclerView(binding.todoRV)
+        var menu=0
+        getTodoList(adapter, menu)
 
-        toDoViewModel.getToDos().observe(viewLifecycleOwner, Observer {
+        binding.todoTV.setOnClickListener {
+            menu=0
+            getTodoList(adapter, menu)
+        }
+
+        binding.completeTV.setOnClickListener {
+            menu=1
+            getTodoList(adapter, menu)
+        }
+
+        binding.allTV.setOnClickListener {
+            menu=2
+            getTodoList(adapter, menu)
+        }
+
+        binding.addBT.setOnClickListener {
+            findNavController().navigate(R.id.action_todoListFragment_to_addTodoFragment)
+        }
+        return binding.root
+    }
+
+    private fun getTodoList(adapter: ToDoAdapter, menu: Int) {
+
+        todoLiveDataList?.removeObservers(viewLifecycleOwner)
+        when(menu){
+            0 -> {
+                val string = SpannableString(getString(R.string.to_do))
+                string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.todoTV.text=string
+                binding.allTV.text=getString(R.string.all)
+                binding.completeTV.text=getString(R.string.complete)
+                todoLiveDataList = toDoViewModel.getRemainingToDos()
+            }
+            1 -> {
+                val string = SpannableString(getString(R.string.complete))
+                string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.todoTV.text=getString(R.string.to_do)
+                binding.allTV.text=getString(R.string.all)
+                binding.completeTV.text=string
+                todoLiveDataList = toDoViewModel.getCompleteToDos()
+            }
+            else->{
+                val string = SpannableString(getString(R.string.all))
+                string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.todoTV.text=getString(R.string.to_do)
+                binding.allTV.text=string
+                binding.completeTV.text=getString(R.string.complete)
+                todoLiveDataList=toDoViewModel.getAllToDos()
+            }
+        }
+
+
+        todoLiveDataList?.observe(viewLifecycleOwner, Observer {
             if (it.isEmpty()) {
+                adapter.submitList(it)
                 binding.todoRV.isVisible = false
                 binding.emptyTV.isVisible = true
             } else {
@@ -49,10 +127,7 @@ class TodoListFragment : Fragment() {
                 binding.todoRV.isVisible = true
             }
         })
-        binding.addBT.setOnClickListener {
-            findNavController().navigate(R.id.action_todoListFragment_to_addTodoFragment)
-        }
-        return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,3 +144,4 @@ class TodoListFragment : Fragment() {
         activity?.window?.statusBarColor = Color.WHITE
     }
 }
+

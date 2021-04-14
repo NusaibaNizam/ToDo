@@ -22,6 +22,7 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
             binding.todo=toDoModel
             binding.isDoneCB.setOnClickListener{
                 val newTodo=ToDoModel(toDoModel.id,toDoModel.name,!toDoModel.isDone,toDoModel.priority,toDoModel.date,toDoModel.time)
+                //toDoModel.isDone=!toDoModel.isDone
                 listener(newTodo, TODO_EDIT)
             }
         }

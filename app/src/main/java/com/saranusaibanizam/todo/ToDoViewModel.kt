@@ -38,5 +38,9 @@ class ToDoViewModel(context: Application):AndroidViewModel(context) {
             todoRep.deleteTodo(toDoModel)
         }
     }
-    fun getToDos():LiveData<List<ToDoModel>> = todoRep.fetchToDos()
+    fun getAllToDos():LiveData<List<ToDoModel>> = todoRep.fetchToDos()
+
+    fun getRemainingToDos():LiveData<List<ToDoModel>> = todoRep.fetchRemainingToDos()
+
+    fun getCompleteToDos():LiveData<List<ToDoModel>> = todoRep.fetchCompleteToDos()
 }

@@ -17,4 +17,12 @@ class ToDoRepository(val context: Context) {
     fun fetchToDos():LiveData<List<ToDoModel>>{
         return toDoDao.getAllToDo()
     }
+
+    fun fetchRemainingToDos():LiveData<List<ToDoModel>>{
+        return toDoDao.getRemainingTodo()
+    }
+
+    fun fetchCompleteToDos():LiveData<List<ToDoModel>>{
+        return toDoDao.getCompletedTodo()
+    }
 }

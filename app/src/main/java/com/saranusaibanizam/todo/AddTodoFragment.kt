@@ -35,6 +35,9 @@ class AddTodoFragment : Fragment() {
         binding.priorityRG.setOnCheckedChangeListener { group, checkedId ->
             val rb=container?.findViewById<RadioButton>(checkedId)
             priority=rb?.text.toString()
+            if(priority == "Normal"){
+                priority= NORMAL
+            }
         }
 
         setDateListener(binding.dateBT)
