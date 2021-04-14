@@ -3,14 +3,15 @@ package com.saranusaibanizam.todo
 import android.content.Context
 import androidx.lifecycle.LiveData
 
-class ToDoRepository(val toDoDao:ToDoDao) {
-    fun insertTodo(toDoModel: ToDoModel){
+class ToDoRepository(val context: Context) {
+    private val toDoDao =ToDoDatabase.getInstance(context).getTodoDao()
+    suspend fun insertTodo(toDoModel: ToDoModel){
         toDoDao.insertToDo(toDoModel)
     }
-    fun deleteTodo(toDoModel: ToDoModel){
+    suspend fun deleteTodo(toDoModel: ToDoModel){
         toDoDao.deleteToDo(toDoModel)
     }
-    fun updateTodo(toDoModel: ToDoModel){
+    suspend fun updateTodo(toDoModel: ToDoModel){
         toDoDao.updateToDo(toDoModel)
     }
     fun fetchToDos():LiveData<List<ToDoModel>>{

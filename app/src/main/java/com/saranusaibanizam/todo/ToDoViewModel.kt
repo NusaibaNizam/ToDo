@@ -3,15 +3,16 @@ package com.saranusaibanizam.todo
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 
 class ToDoViewModel(context: Application):AndroidViewModel(context) {
 
-    private val toDoDao =ToDoDatabase.getInstance(context).getTodoDao()
-    private val todoRep: ToDoRepository= ToDoRepository(toDoDao)
+    private val todoRep: ToDoRepository= ToDoRepository(context)
     fun getCorrectTime(time:Long, date:Long):Long{
-        val cal= Calendar.getInstance();
+        val cal= Calendar.getInstance()
         cal.timeInMillis=time
         val hour=cal.get(Calendar.HOUR_OF_DAY)
         val minute=cal.get(Calendar.MINUTE)
@@ -23,13 +24,19 @@ class ToDoViewModel(context: Application):AndroidViewModel(context) {
         return cal.timeInMillis
     }
     fun addToDo(toDoModel: ToDoModel){
-        todoRep.insertTodo(toDoModel)
+        viewModelScope.launch {
+            todoRep.insertTodo(toDoModel)
+        }
     }
     fun updateToDo(toDoModel: ToDoModel){
-        todoRep.updateTodo(toDoModel)
+        viewModelScope.launch {
+            todoRep.updateTodo(toDoModel)
+        }
     }
     fun removeToDo(toDoModel: ToDoModel){
-        todoRep.deleteTodo(toDoModel)
+        viewModelScope.launch {
+            todoRep.deleteTodo(toDoModel)
+        }
     }
     fun getToDos():LiveData<List<ToDoModel>> = todoRep.fetchToDos()
 }

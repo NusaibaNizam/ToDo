@@ -3,7 +3,6 @@ package com.saranusaibanizam.todo
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -16,7 +15,7 @@ import com.saranusaibanizam.todo.databinding.TodoRowBinding
 class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):ListAdapter<ToDoModel,ToDoAdapter.ToDoViewHolder>(ToDoDiffCallBack()) {
     private lateinit var binding:TodoRowBinding
     val swipeToDeleteCallback=SwipeToDeleteCallback()
-    class ToDoViewHolder(val binding: TodoRowBinding,val listener:(ToDoModel,String)->Unit):RecyclerView.ViewHolder(binding.root){
+    class ToDoViewHolder(private val binding: TodoRowBinding, val listener:(ToDoModel, String)->Unit):RecyclerView.ViewHolder(binding.root){
 
 
         fun bind(toDoModel: ToDoModel){
@@ -36,6 +35,10 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
     override fun onBindViewHolder(holder: ToDoViewHolder, position: Int) {
         holder.bind(getItem(holder.adapterPosition))
     }
+
+
+
+    //swipe to delete
     inner class SwipeToDeleteCallback:ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT){
 
         private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_accent)
@@ -95,6 +98,10 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
         }
 
     }
+
+
+
+
 }
 class ToDoDiffCallBack:DiffUtil.ItemCallback<ToDoModel>(){
     override fun areItemsTheSame(oldItem: ToDoModel, newItem: ToDoModel): Boolean {

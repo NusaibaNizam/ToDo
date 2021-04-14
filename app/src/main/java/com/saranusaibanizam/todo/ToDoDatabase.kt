@@ -14,7 +14,6 @@ abstract class ToDoDatabase:RoomDatabase() {
             return INSTANCE?: synchronized(this){
                 val db=Room
                     .databaseBuilder(context,ToDoDatabase::class.java,"db_todo")
-                    .allowMainThreadQueries()
                     .build()
                 INSTANCE=db
                 db
