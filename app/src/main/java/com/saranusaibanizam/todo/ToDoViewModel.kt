@@ -43,4 +43,12 @@ class ToDoViewModel(context: Application):AndroidViewModel(context) {
     fun getRemainingToDos():LiveData<List<ToDoModel>> = todoRep.fetchRemainingToDos()
 
     fun getCompleteToDos():LiveData<List<ToDoModel>> = todoRep.fetchCompleteToDos()
+
+    fun getNotifyTime(time:Long):Long{
+        var notifyTime= time-System.currentTimeMillis()
+        if(notifyTime<0){
+            notifyTime=30000
+        }
+        return notifyTime
+    }
 }

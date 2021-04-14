@@ -61,22 +61,19 @@ class TodoListFragment : Fragment() {
         binding.todoRV.adapter=adapter
         val ItemTouchHelper=ItemTouchHelper(adapter.swipeToDeleteCallback)
         ItemTouchHelper.attachToRecyclerView(binding.todoRV)
-        var menu=0
-        getTodoList(adapter, menu)
+
+        getTodoList(adapter, 0)
 
         binding.todoTV.setOnClickListener {
-            menu=0
-            getTodoList(adapter, menu)
+            getTodoList(adapter, 0)
         }
 
         binding.completeTV.setOnClickListener {
-            menu=1
-            getTodoList(adapter, menu)
+            getTodoList(adapter, 1)
         }
 
         binding.allTV.setOnClickListener {
-            menu=2
-            getTodoList(adapter, menu)
+            getTodoList(adapter, 2)
         }
 
         binding.addBT.setOnClickListener {
@@ -93,24 +90,33 @@ class TodoListFragment : Fragment() {
                 val string = SpannableString(getString(R.string.to_do))
                 string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.todoTV.text=string
+                binding.todoTV.setTextColor(resources.getColor(R.color.white,null))
                 binding.allTV.text=getString(R.string.all)
+                binding.allTV.setTextColor(resources.getColor(R.color.grey,null))
                 binding.completeTV.text=getString(R.string.complete)
+                binding.completeTV.setTextColor(resources.getColor(R.color.grey,null))
                 todoLiveDataList = toDoViewModel.getRemainingToDos()
             }
             1 -> {
                 val string = SpannableString(getString(R.string.complete))
                 string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.todoTV.text=getString(R.string.to_do)
+                binding.todoTV.setTextColor(resources.getColor(R.color.grey,null))
                 binding.allTV.text=getString(R.string.all)
+                binding.allTV.setTextColor(resources.getColor(R.color.grey,null))
                 binding.completeTV.text=string
+                binding.completeTV.setTextColor(resources.getColor(R.color.white,null))
                 todoLiveDataList = toDoViewModel.getCompleteToDos()
             }
             else->{
                 val string = SpannableString(getString(R.string.all))
                 string.setSpan(UnderlineSpan(), 0, string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 binding.todoTV.text=getString(R.string.to_do)
+                binding.todoTV.setTextColor(resources.getColor(R.color.grey,null))
                 binding.allTV.text=string
+                binding.allTV.setTextColor(resources.getColor(R.color.white,null))
                 binding.completeTV.text=getString(R.string.complete)
+                binding.completeTV.setTextColor(resources.getColor(R.color.grey,null))
                 todoLiveDataList=toDoViewModel.getAllToDos()
             }
         }
