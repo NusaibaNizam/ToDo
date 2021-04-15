@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -38,19 +37,33 @@ class TodoListFragment : Fragment() {
 
         val adapter = ToDoAdapter(requireActivity()){ todo, changeType->
             when(changeType){
-                TODO_EDIT -> toDoViewModel.updateToDo(todo)
+                TODO_EDIT -> {
+                    if(todo.notify){
+                        if(todo.isDone){
+                            toDoViewModel.getWorkManager().cancelWork(todo.notifId!!)
+                        }else if(todo.time>System.currentTimeMillis()){
+                            todo.notifyTime=toDoViewModel.getNotifyTime(todo.time)
+                            todo.notifId=toDoViewModel.getWorkManager().schedule(todo.name,todo.notifyTime)
+                        }
+                    }
+                    toDoViewModel.updateToDo(todo)
+                }
                 TODO_DELETE -> {
-                    val newTodo=ToDoModel(todo.id,todo.name,todo.isDone,todo.priority,todo.date,todo.time)
+                    val newTodo=ToDoModel(todo.id,todo.name,todo.isDone,todo.priority,todo.date,todo.time,todo.notify,todo.notifyTime,todo.notifId)
                     toDoViewModel.removeToDo(todo)
                     val undoSnackbar = Snackbar.make(binding.todoListCV,
                             R.string.undo_delete, Snackbar.LENGTH_LONG)
                     undoSnackbar.setAction(R.string.undo, View.OnClickListener {
+                        newTodo.notifyTime=toDoViewModel.getNotifyTime(newTodo.notifyTime)
                         toDoViewModel.addToDo(newTodo)
                     })
                     undoSnackbar.anchorView = binding.snackBarAnchor
                     undoSnackbar.show()
                     undoSnackbar.addCallback(object :BaseTransientBottomBar.BaseCallback<Snackbar>(){
                         override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            if(todo.notify) {
+                                toDoViewModel.getWorkManager().cancelWork(todo.notifId!!)
+                            }
                             super.onDismissed(transientBottomBar, event)
                         }
                     })

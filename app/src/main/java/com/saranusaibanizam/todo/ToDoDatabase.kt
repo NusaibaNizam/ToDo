@@ -16,6 +16,7 @@ abstract class ToDoDatabase:RoomDatabase() {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("alter table 'table_todo' add column 'notify' integer not null default 0")
                 database.execSQL("alter table 'table_todo' add column 'notify_time' integer not null default 0")
+                database.execSQL("alter table 'table_todo' add column 'notify_id' string default null")
             }
 
         }

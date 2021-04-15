@@ -17,5 +17,7 @@ data class ToDoModel(
         var time: Long=System.currentTimeMillis(),
         var notify:Boolean=false,
         @ColumnInfo(name = "notify_time")
-        var notifyTime:Long=0
+        var notifyTime:Long=0,
+        @ColumnInfo(name = "notify_id")
+        var notifId:String?=null
 )

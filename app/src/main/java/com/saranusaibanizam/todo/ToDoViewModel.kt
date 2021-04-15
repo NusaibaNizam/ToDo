@@ -4,11 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-class ToDoViewModel(context: Application):AndroidViewModel(context) {
+class ToDoViewModel(val context: Application):AndroidViewModel(context) {
 
     private val todoRep: ToDoRepository= ToDoRepository(context)
     fun getCorrectTime(time:Long, date:Long):Long{
@@ -46,9 +47,12 @@ class ToDoViewModel(context: Application):AndroidViewModel(context) {
 
     fun getNotifyTime(time:Long):Long{
         var notifyTime= time-System.currentTimeMillis()
-        if(notifyTime<0){
+        if(notifyTime<30000){
             notifyTime=30000
         }
         return notifyTime
+    }
+    fun getWorkManager():WorkManagerUtils{
+        return WorkManagerUtils(context)
     }
 }

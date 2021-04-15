@@ -18,11 +18,13 @@ import java.util.*
 class AddTodoFragment : Fragment() {
     lateinit var binding: FragmentAddTodoBinding
     private var priority= NORMAL
+    lateinit var name:String
     private var date:Long=System.currentTimeMillis()
     private var time:Long=System.currentTimeMillis()
     private var notifyMe:Boolean=false
     private var isDone:Boolean=false
     private var notifyTime:Long=0
+    private var notifId:String?=null
     private val toDoViewModel:ToDoViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,12 +56,17 @@ class AddTodoFragment : Fragment() {
 
         binding.saveBT.setOnClickListener {
             if(!TextUtils.isEmpty(binding.todoET.text)){
-                val name=binding.todoET.text.toString()
+                name=binding.todoET.text.toString()
                 time=toDoViewModel.getCorrectTime(time,date)
 
                 notifyTime=toDoViewModel.getNotifyTime(time)
 
-                val todo=ToDoModel(name = name,isDone =isDone,priority = priority,date = date,time = time,notify = notifyMe,notifyTime = notifyTime)
+                if(notifyMe){
+                    notifId=toDoViewModel.getWorkManager().schedule(name,notifyTime)
+                }
+                val todo=ToDoModel(name = name,isDone =isDone,priority = priority,date = date,
+                    time = time,notify = notifyMe,notifyTime = notifyTime,notifId = notifId)
+
                 toDoViewModel.addToDo(todo)
                 findNavController().navigate(R.id.action_addTodoFragment_to_todoListFragment)
 
