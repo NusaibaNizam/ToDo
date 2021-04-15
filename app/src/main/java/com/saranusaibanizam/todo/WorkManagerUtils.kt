@@ -1,6 +1,7 @@
 package com.saranusaibanizam.todo
 
 import android.content.Context
+import android.util.Log
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
@@ -20,6 +21,7 @@ class WorkManagerUtils(val context: Context) {
     }
     fun cancelWork(id:String){
         workManager.cancelWorkById(UUID.fromString(id))
+
     }
 
 }

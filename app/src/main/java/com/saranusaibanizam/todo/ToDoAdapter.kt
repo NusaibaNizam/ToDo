@@ -21,7 +21,8 @@ class ToDoAdapter(val context: Context,val listener:(ToDoModel,String)->Unit):Li
         fun bind(toDoModel: ToDoModel){
             binding.todo=toDoModel
             binding.isDoneCB.setOnClickListener{
-                val newTodo=ToDoModel(toDoModel.id,toDoModel.name,!toDoModel.isDone,toDoModel.priority,toDoModel.date,toDoModel.time)
+                val newTodo=ToDoModel(toDoModel.id,toDoModel.name,!toDoModel.isDone,
+                        toDoModel.priority,toDoModel.date,toDoModel.time,toDoModel.notify,toDoModel.notifyTime,toDoModel.notifId)
                 //toDoModel.isDone=!toDoModel.isDone
                 listener(newTodo, TODO_EDIT)
             }
